@@ -5,34 +5,28 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
-import models.MusicModel;
 import services.MySQLdb;
-import models.UserModel;
 
 
 @WebServlet(name = "SignUpServlet", value = "/SignUpServlet")
 public class SignUpServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String passwordRepeat = request.getParameter("password-repeat");
         long i = -1;
-/*        if(passwordRepeat != password) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("signup.jsp");
-            request.setAttribute("error", "Passwords must be the same!");
-            requestDispatcher.forward(request, response);
+        if (username == null || username.trim().isEmpty()
+                || email == null || email.trim().isEmpty()
+                || password == null || password.isEmpty() || !password.equals(passwordRepeat)) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            request.setAttribute("error", "Enter a username and email, and make sure the passwords match.");
+            request.getRequestDispatcher("/signup.jsp").forward(request, response);
             return;
         }
-*/
         MySQLdb db = MySQLdb.getInstance();
         try {
             i = db.doSignUp(username, email, password);
@@ -40,9 +34,8 @@ public class SignUpServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        if(i != -1) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("login.jsp");
-            requestDispatcher.forward(request, response);
+        if (i > 0) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
         } else {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("signup.jsp");
             request.setAttribute("error", "Error in sign up, please try again!!!");

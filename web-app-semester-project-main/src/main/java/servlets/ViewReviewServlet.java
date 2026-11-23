@@ -18,27 +18,35 @@ public class ViewReviewServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String revID = request.getParameter("revID");
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
 
-        MySQLdb db = MySQLdb.getInstance();
-        MusicModel musicModel = null;
+        int reviewId;
         try {
-            musicModel = db.fetchSingleMusic(Integer.parseInt(revID));
-        } catch(SQLException e) {
-            e.printStackTrace();
+            reviewId = Integer.parseInt(request.getParameter("revID"));
+            if (reviewId <= 0) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
         }
 
-        if (musicModel != null) {
-
-            HttpSession session = request.getSession();
-            session.setAttribute("currentMusic", musicModel);
-
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("viewReview.jsp");
-            requestDispatcher.forward(request, response);
-        } else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("error", "Issue with loading selected review!");
-            requestDispatcher.forward(request, response);
+        MusicModel music;
+        try {
+            music = MySQLdb.getInstance().fetchSingleMusic(reviewId);
+        } catch (SQLException e) {
+            throw new ServletException("Could not load review", e);
         }
+        if (music == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        request.setAttribute("currentMusic", music);
+        request.getRequestDispatcher("/WEB-INF/viewReview.jsp").forward(request, response);
     }
 }
