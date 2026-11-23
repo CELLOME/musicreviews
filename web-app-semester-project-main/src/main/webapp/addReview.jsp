@@ -275,10 +275,10 @@
             <table>
                 <tbody>
                 <tr>
-                    <td style="text-align:right; width:65%">Star rating:</td>
+                    <td style="text-align:right; width:65%">Content rating:</td>
                     <td>
                         <select name="album_rating" id="album_rating" style="width:150px">
-                            <option value="EXCLIPIT">EXICLIPIT</option>
+                            <option value="EXPLICIT">EXPLICIT</option>
                             <option value="CLEAN">CLEAN</option>
                         </select>
                     </td>

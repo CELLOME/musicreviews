@@ -245,7 +245,9 @@
                                 <a href="LogoutServlet" style="text-align:center;color:white" class="btn">Logout</a>
                             </div>
                             <div class="row">
+                                <c:if test="${sessionScope.user.privilege == 1}">
                                 <a href="addReview.jsp" style="text-align:center;color:white" class="btn">Add Review</a>
+                                </c:if>
                             </div>
                         </div>
                     </li>
@@ -278,9 +280,10 @@
         <h1 id="center1"> Top </h1></div>
     <c:forEach var="featured_music" items="${list_of_music}" end="0">
         <div class="container" id="rcorners0">
-            <div class="block"><img class="float" src="${featured_music.getPhoto_filename()}" width="150" height="100"></div>
-            <h2>${featured_music.getReview_title()}</h2> <br>
-            <p>${featured_music.getReview_body()}</p>
+            <div class="block"><img class="float" src="<c:out value="${featured_music.getPhoto_filename()}"/>" width="150" height="100"></div>
+            <h2><c:out value="${featured_music.getReview_title()}"/></h2> <br>
+            <p><c:out value="${featured_music.getReview_body()}"/></p>
+            <a href="ViewReviewServlet?revID=${featured_music.getRevID()}">View Review</a>
         </div>
     </c:forEach>
 
@@ -289,19 +292,17 @@
         <h1 id="center1"> Section 1 </h1></div>
     <div class="container" id="rcorners2">
         <div class="grid">
-            <form action="FetchMusicServlet">
                 <c:forEach var="each_music" items="${list_of_music}" begin="1" end="8">
 
                     <form action="ViewReviewServlet" method="post">
                         <div class="row">
-                            <img src="${each_music.getPhoto_filename()}" width="150" height="100">
-                            <p>${each_music.getReview_title()}</p>
-                            <input type="text" id="revID" name="revID" value="${each_music.getRevID()}" hidden="true" ></input>
+                            <img src="<c:out value="${each_music.getPhoto_filename()}"/>" width="150" height="100">
+                            <p><c:out value="${each_music.getReview_title()}"/></p>
+                            <input type="hidden" name="revID" value="${each_music.getRevID()}">
                             <input type="submit" value="View Review">
                         </div>
                     </form>
                 </c:forEach>
-            </form>
         </div>
     </div>
     <div class="container" id="rcorners1">
@@ -309,19 +310,17 @@
         <h2 id="center1">Section 2</h2></div>
     <div class="container" id="rcorners2">
         <div class="grid">
-            <form action="FetchMusicServlet">
                 <c:forEach var="each_music" items="${list_of_music}" begin="9">
 
                     <form action="ViewReviewServlet" method="post">
                         <div class="row">
-                            <img src="${each_music.getPhoto_filename()}" width="150" height="100">
-                            <p>${each_music.getReview_title()}</p>
-                            <input type="text" id="revID" name="revID" value="${each_music.getRevID()}" hidden="true" ></input>
+                            <img src="<c:out value="${each_music.getPhoto_filename()}"/>" width="150" height="100">
+                            <p><c:out value="${each_music.getReview_title()}"/></p>
+                            <input type="hidden" name="revID" value="${each_music.getRevID()}">
                             <input type="submit" value="View Review">
                         </div>
                     </form>
                 </c:forEach>
-            </form>
         </div>
     </div>
     <span id="error_msg"></span>

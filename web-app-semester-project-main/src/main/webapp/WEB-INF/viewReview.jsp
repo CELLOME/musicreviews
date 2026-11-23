@@ -222,16 +222,7 @@
     </style>
 </head>
 <body>
-<%
-    if (request.getSession() != null) {
-        if (session.getAttribute("currentMusic") == null) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-            //request.setAttribute("error", "Please login to continue!");
-            requestDispatcher.forward(request, response);
-        }
-    }
-    MusicModel currentMusic = (MusicModel) session.getAttribute("currentMusic");
-%>
+<% MusicModel currentMusic = (MusicModel) request.getAttribute("currentMusic"); %>
 <section id="center1">
     <div class="container" id="rcorners1">
         <div class="wrapper">
@@ -252,10 +243,10 @@
     <div class="container" id="rcorners_hr">
         <hr style="width:92%"> </div>
     <div class="container" id="rcorners0">
-        <div class="block"> <img class="float" id="left" src="<%=currentMusic.getPhoto_filename()%>" alt="Picture" width="250" height="200"></div>
-        <h1><%=currentMusic.getReview_title()%></h1>
-        <h1> <%=currentMusic.getAlbum_title()%> , <%=currentMusic.getAlbum_rating()%> </h1>
-        <h2>By: <%=currentMusic.getArtist_name()%></h2>
+        <div class="block"> <img class="float" id="left" src="<c:out value="${currentMusic.photo_filename}"/>" alt="Picture" width="250" height="200"></div>
+        <h1><c:out value="${currentMusic.review_title}"/></h1>
+        <h1> <c:out value="${currentMusic.album_title}"/> , <c:out value="${currentMusic.album_rating}"/> </h1>
+        <h2>By: <c:out value="${currentMusic.artist_name}"/></h2>
         <table style="width:100%">
             <tbody>
                  <tr>
@@ -274,7 +265,7 @@
             </tbody>
         </table>
         <div class="container" id="rcorners3"> </div>
-        <div class="container" id="rcorners2"> <%= currentMusic.getReview_body() %> </div>
+        <div class="container" id="rcorners2"> <c:out value="${currentMusic.review_body}"/> </div>
     </div>
 </section>
 </body>
